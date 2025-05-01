@@ -286,4 +286,5 @@ def back_to_main(message):
 
 
 if __name__ == '__main__':
-    bot.polling()
+    bot.remove_webhook() 
+    bot.polling(none_stop=True)

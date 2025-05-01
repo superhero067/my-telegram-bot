@@ -6,9 +6,12 @@ import threading
 import time
 import os
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
-TOKEN = os.getenv('TELEGRAM_TOKEN')
+TOKEN = TOKEN = os.getenv('TELEGRAM_TOKEN') or os.environ.get('TELEGRAM_TOKEN')
+if not TOKEN:
+    raise ValueError("Не задан TELEGRAM_TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -229,7 +232,7 @@ def show_stats(message):
         f"❌ Неправильных: {stats['wrong']}\n"
         f"🎯 Точность: {accuracy:.1f}%\n\n"
         f"По темам:\n"
-        f"⏰ Следующее уведомление: {notification_time}"
+        f"⏰ Следующее уведомление: {notification_time}\n"
     )
 
     for topic, topic_stats in stats["by_topic"].items():
@@ -286,5 +289,13 @@ def back_to_main(message):
 
 
 if __name__ == '__main__':
-    bot.remove_webhook() 
-    bot.polling(none_stop=True)
+    print("Запуск бота...")
+    notification_thread.start()
+    
+    while True:
+        try:
+            bot.remove_webhook()
+            bot.polling(none_stop=True, interval=2, timeout=30)
+        except Exception as e:
+            print(f"Ошибка: {e}")
+            time.sleep(5)

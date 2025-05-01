@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 import requests
 
 load_dotenv()
-TOKEN = TOKEN = os.getenv('TELEGRAM_TOKEN') or os.environ.get('TELEGRAM_TOKEN')
+TOKEN = os.getenv('TELEGRAM_TOKEN') or os.environ.get('TELEGRAM_TOKEN')
 if not TOKEN:
     raise ValueError("Не задан TELEGRAM_TOKEN")
 
